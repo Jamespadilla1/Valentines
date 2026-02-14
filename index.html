@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy valentines my Ashley 🤍</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #fff1f5, #fce7f3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+
+    h1 {
+      color: #e25588;
+    }
+
+    button {
+      padding: 10px 16px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .music-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .music-btn {
+      background: #fde2e4;
+    }
+
+    .volume {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .buttons {
+      display: grid;
+      gap: 12px;
+    }
+
+    .open-btn {
+      background: #f9c6d3;
+    }
+
+    .open-btn:hover {
+      background: #f7a8bf;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .paper {
+      padding: 25px;
+      border-radius: 10px;
+      font-family: 'Georgia', serif;
+      line-height: 1.6;
+      margin-top: 15px;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeInPaper 0.8s ease forwards;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+    }
+
+    @keyframes fadeInPaper {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .home-btn {
+      margin-top: 20px;
+      background: #fde2e4;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: #777;
+    }
+
+    .now-playing {
+      margin-bottom: 20px;
+      padding: 10px;
+      border-radius: 12px;
+      background: #fff0f5;
+      font-size: 0.8rem;
+    }
+
+    .volume-label {
+      font-size: 0.8rem;
+      margin: 10px 0 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div id="homePage" class="page active">
+    <h1>Open When You Need It 🤍</h1>
+    <p>
+      Hi Langga,<br>
+      I made this only for you langga and yeah it's another website HAHAHHA since it's valentines day I also want to give my love through online.<br>
+      Open it whenever you need a little comfort whenever if you're tired and something to remember me by.
+      I always Love you my Langga, my baby and my ashley!! -Love Lansoy
+    </p>
+
+    <audio id="bgMusic"></audio>
+
+    <div class="music-controls">
+      <button class="music-btn" onclick="toggleMusic()">▶ Play</button>
+      <button class="music-btn" onclick="nextSong()">⏭ Next</button>
+    </div>
+
+    <p class="volume-label">Volume</p>
+    <input
+      class="volume"
+      type="range"
+      min="0"
+      max="1"
+      step="0.01"
+      value="0.4"
+      onchange="changeVolume(this.value)"
+    >
+
+    <div class="now-playing">
+      <strong>Now Playing:</strong><br>
+      <span id="songTitle"></span>
+    </div>
+
+    <div class="buttons">
+      <button class="open-btn" onclick="openNote('tired')">Open when you're tired</button>
+      <button class="open-btn" onclick="openNote('stressed')">Open when you're stressed</button>
+      <button class="open-btn" onclick="openNote('sick')">Open when you're sick</button>
+      <button class="open-btn" onclick="openNote('sad')">Open when you're sad</button>
+    </div>
+
+    <footer>
+      Happy Valentine’s Day 💕
+    </footer>
+  </div>
+
+  <div id="notePage" class="page">
+    <h1>🤍</h1>
+    <div id="noteContent" class="paper"></div>
+    <button class="home-btn" onclick="goHome()">← Home</button>
+  </div>
+
+</div>
+
+<script>
+  const playlist = [
+    { file: "keshi - Dream.mp3", title: "Keshi - Dream" },
+    { file: "The Marías  Sienna.mp3", title: "The Marías - Sienna" },
+    { file: "The Marías - No One Noticed (Audio).mp3", title: "The Marias - No One Noticed" },
+    { file: "girl in red - we fell in love in october.mp3", title: "girl in red - we fell in love in october" }
+  ];
+
+  let currentSong = 0;
+  let playing = false;
+  const music = document.getElementById("bgMusic");
+  const playBtn = document.querySelector(".music-btn");
+  const songTitle = document.getElementById("songTitle");
+
+  music.src = playlist[currentSong].file;
+  music.volume = 0.4;
+  songTitle.textContent = playlist[currentSong].title;
+
+  music.addEventListener("ended", () => {
+    nextSong();
+  });
+
+  function toggleMusic() {
+    if (!playing) {
+      music.play();
+      playBtn.textContent = "⏸ Pause";
+    } else {
+      music.pause();
+      playBtn.textContent = "▶ Play";
+    }
+    playing = !playing;
+  }
+
+  function nextSong() {
+    music.pause();
+    currentSong = (currentSong + 1) % playlist.length;
+    music.src = playlist[currentSong].file;
+    songTitle.textContent = playlist[currentSong].title;
+    music.play();
+    playing = true;
+    playBtn.textContent = "⏸ Pause";
+  }
+
+  function changeVolume(value) {
+    music.volume = value;
+  }
+
+  const notes = {
+    tired: { text: "Abaw tired ang baby?\n\nHAHAHAH it's okay baby every capable person can also get tired. That's where the challenge starts and winners will always keep going baby and I know you're a winner. Take all the rest you need baby and don't forget your lansoy is always here for you!", color: "#fffaf0" },
+    stressed: { text: "It's me again, it must've been tough baby\n\nI know that I'm not usually there for you in person but you know what I am through online, My eyes, my ears and my attention are always focused on my langga. Just hit me up or you don't have to because I can tell baby, I love you!", color: "#f0f9ff" },
+    sick: { text: "Ahayy my baby is sick :((\n\n It's alright my langga, everything's gonna be fine because your boyfie is also a semi nurse and a nutritionist HAHAH y know the drill", color: "#fdf4ff" },
+    sad: { text: "My Ashley:((\n\n I wish I could bring you comfort in person, and I hope this website and message will if I'm not around. It's okay to not be okay right? You taught me that langga, and I'll appreciate it. I'm not here to fix you and vulnerability is strength, whatever you're feeling is valid even the messy parts and I really really care about you and don't forget baby, You're lansoy is here for you when you need me!", color: "#f0fdf4" },
+  };
+
+  function openNote(type) {
+    const paper = document.getElementById("noteContent");
+    paper.textContent = notes[type].text;
+    paper.style.background = notes[type].color;
+
+    document.getElementById("homePage").classList.remove("active");
+    document.getElementById("notePage").classList.add("active");
+  }
+
+  function goHome() {
+    document.getElementById("notePage").classList.remove("active");
+    document.getElementById("homePage").classList.add("active");
+  }
+
+  function startMusicOnce() {
+    music.play();
+    playing = true;
+    playBtn.textContent = "⏸ Pause";
+    document.removeEventListener("click", startMusicOnce);
+    document.removeEventListener("touchstart", startMusicOnce);
+  }
+
+  document.addEventListener("click", startMusicOnce);
+  document.addEventListener("touchstart", startMusicOnce);
+</script>
+
+</body>
+</html>
+
